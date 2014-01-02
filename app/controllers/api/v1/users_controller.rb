@@ -3,11 +3,12 @@ class Api::V1::UsersController < Api::ApiController
 	before_filter :check_collector, :only => [:index]
 
 	def create
-		@user = User.build(user_profile_parameters)
-		unless @user.save
+		@user = User.new(user_profile_parameters)
+		if @user.save
+			render "show"
+		else
 			render_errors('501', @user.errors)
 		end
-		render "show"
 	end
 
 	def update
@@ -35,6 +36,6 @@ class Api::V1::UsersController < Api::ApiController
 
 
 	def user_profile_parameters
-    	params.require(:user).permit(:name, :email, :password_digest, :credit, :role)
+    	params.require(:user).permit(:email, :password, :password_confirmation, :credit, :role)
   	end
 end

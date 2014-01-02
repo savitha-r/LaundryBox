@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131229112008) do
+ActiveRecord::Schema.define(version: 20140102043535) do
 
   create_table "items", force: true do |t|
     t.string   "name"
@@ -24,9 +24,12 @@ ActiveRecord::Schema.define(version: 20131229112008) do
     t.decimal  "cost",            precision: 4, scale: 2, default: 0.0
     t.string   "status",                                  default: "Awaiting Collection"
     t.text     "special_message"
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "orders", ["user_id"], name: "index_orders_on_user_id"
 
   create_table "users", force: true do |t|
     t.string   "email"

@@ -1,18 +1,14 @@
 class Order < ActiveRecord::Base
+
 belongs_to :user
 has_many :items
-validates_presence_of :cost, :status
 
-after_save :check_status, :if => self.status_changed?
+validates_presence_of :cost, :status
+validates_inclusion_of :status, :in => ["AWAITING_COLLECTION", "PENDING_PAYMENT", "PAID", "READY"]
+
+after_save :check_status
 before_save :calculate_cost
 
-
-STATUS = {
-	  AWAITING_COLLECTION => "Awaiting Collection",
-	  PENDING_PAYMENT => "Pending Payment",
-	  PAID => "Payment Completed",
-	  READY => "Order Ready"
-  }
 
 def check_status
 	if status == PENDING_PAYMENT

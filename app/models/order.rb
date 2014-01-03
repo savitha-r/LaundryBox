@@ -1,7 +1,9 @@
 class Order < ActiveRecord::Base
 
 belongs_to :user
-has_many :items
+has_many :orderitems
+has_many :items, :through => :orderitems
+
 
 validates_presence_of :cost, :status
 validates_inclusion_of :status, :in => ["AWAITING_COLLECTION", "PENDING_PAYMENT", "PAID", "READY"]
@@ -16,14 +18,17 @@ end
 
 
 def check_status
-	if status == PENDING_PAYMENT
+	if status == "PENDING_PAYMENT"
+		p 'send notification waiting payment'
 		#send notification of payment amoune
-	elsif status == READY
+	elsif status == "READY"
+		p 'send notification ready'
 		#send notification that laundry is ready
 	end
 end
 
 def calculate_cost
+	self.cost = 0.0
 	self.items.each do |i|
 		self.cost += i.cost
 	end

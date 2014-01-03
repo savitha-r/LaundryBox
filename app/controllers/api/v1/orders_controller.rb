@@ -1,11 +1,14 @@
 class Api::V1::OrdersController < Api::ApiController
-	before_filter :check_order_belongs_to_user, :except => [:create]
+	before_filter :check_order_belongs_to_user, :except => [:create, :index]
 
 	def create
 		@order = current_user.orders.build(order_profile_parameters)
-		binding.pry
 		if @order.save
-			render "show"
+			if @order.update_attributes(order_child_parameters)
+				render "show"
+			else
+				render_errors('501', @order.errors)
+			end
 		else
 			render_errors('501',@order.errors)
 		end
@@ -13,10 +16,11 @@ class Api::V1::OrdersController < Api::ApiController
 
 	def update
 		@order = get_entity Order.find_by_id(params[:id])
-		unless @order.update_attributes(user_profile_parameters)
+		if @order.update_attributes(order_profile_parameters)
+			render "show"
+		else
 			render_errors('501', @order.errors)
 		end
-		render "show"
 	end
 
 	def show
@@ -45,13 +49,17 @@ class Api::V1::OrdersController < Api::ApiController
 	private
 
 	def check_order_belongs_to_user
-		@order = get_entity Order.find_by_id(params[:order_id])
+		@order = get_entity Order.find_by_id(params[:id])
 		unless @order.user_id == current_user.id || current_user.role == "collector"
 			render_errors('501',['This order does not belong to the current user.'])
 		end
 	end
 
+	def order_child_parameters
+    	params.require(:order).permit(:item_ids => [])
+  	end	
+
 	def order_profile_parameters
-    	params.require(:order).permit(:cost, :status, :special_message, :item_ids)
+    	params.require(:order).permit(:cost, :status, :special_message)
   	end
 end

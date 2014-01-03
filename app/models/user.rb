@@ -11,7 +11,7 @@ class User < ActiveRecord::Base
 	ROLES = ["customer", "collector", "admin"]
 
 	def check_session_expire
-		if !self.secure_token_expire.nil && DateTime.now > self.secure_token_expire
+		if !self.secure_token_expire.nil? && DateTime.now > self.secure_token_expire
 			return true
 		else
 			return false
@@ -23,9 +23,14 @@ class User < ActiveRecord::Base
 		self.secure_token_expire = DateTime.now + 1.hours
 	end
 
+	def update_token_expire
+		self.secure_token_expire = DateTime.now + 1.hours
+	end
+
 	def remove_secure_token
 		self.secure_token = nil
 		self.secure_token_expire = nil
+		self.save
 	end
 
 	def deduct_credit(cost)

@@ -8,6 +8,11 @@ validates_inclusion_of :status, :in => ["AWAITING_COLLECTION", "PENDING_PAYMENT"
 
 after_save :check_status
 before_save :calculate_cost
+before_create :set_default_status
+
+def set_default_status
+	self.status = "AWAITING_COLLECTION"
+end
 
 
 def check_status

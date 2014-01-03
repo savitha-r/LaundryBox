@@ -5,7 +5,7 @@ class Api::ApiController < ActionController::Base
   
  
   def get_entity entity
-  	render_errors('501',['Entity not found']) unless entity.present?
+    render_errors('501',['Entity not found']) unless entity.present?
     return entity
   end
 
@@ -16,9 +16,9 @@ class Api::ApiController < ActionController::Base
   def check_access_token
     @user = get_entity User.find_by_secure_token(params[:secure_token])
     if @user.check_session_expire
-      raise Errors::NotFound
+      render_errors('501',['Entity not found']) unless entity.present?
     else
-      current_user = @user
+      set_current_user(@user)
     end
       
   end

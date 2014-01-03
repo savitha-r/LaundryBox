@@ -12,10 +12,11 @@ class Api::V1::UsersController < Api::ApiController
 	end
 
 	def update
-		unless current_user.update_attributes(user_profile_parameters)
+		if current_user.update_attributes(user_profile_parameters)
+			render "show"
+		else
 			render_errors('501', @user.errors)
 		end
-		render "show"
 	end
 
 	def show

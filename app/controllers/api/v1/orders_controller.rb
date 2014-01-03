@@ -3,10 +3,12 @@ class Api::V1::OrdersController < Api::ApiController
 
 	def create
 		@order = current_user.orders.build(order_profile_parameters)
-		unless @order.save
+		binding.pry
+		if @order.save
+			render "show"
+		else
 			render_errors('501',@order.errors)
 		end
-		render "show"
 	end
 
 	def update

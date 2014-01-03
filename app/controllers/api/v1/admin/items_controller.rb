@@ -1,16 +1,20 @@
-class Api::V1::ItemsController < Api::ApiController
+class Api::V1::Admin::ItemsController < Api::ApiController
 	before_filter :check_role, :except => [:show, :index]
 	
 	def create
-		@item = Item.build(item_parameters)
-		unless @item.save
+		@item = Item.new(item_parameters)
+		if @item.save
+			render "show"
+		else
 			render_errors('501',@item.errors)
 		end
 	end
 
 	def update
 		@item = get_entity Item.find_by_id(params[:id])
-		unless @item.update_attributes(item_parameters)
+		if @item.update_attributes(item_parameters)
+			render "show"
+		else
 			render_errors('501', @item.errors)
 		end
 	end
@@ -34,8 +38,6 @@ class Api::V1::ItemsController < Api::ApiController
 	private
 
 	def item_parameters
-    	params.require(:user).permit(:name, :cost)
+    	params.require(:item).permit(:name, :cost)
   	end
-
-
 end

@@ -19,34 +19,12 @@ Response example :
 
 ```javascript
 {
-	"malls": [{
-			"id": 1,
-		        "name": "*Scape",
-		        "sl_mall_id": "",
-		        "address": "2 Orchard Link",
-		        "latitude": 1.30087,
-		        "longitude": 103.835,
-		        "zip": "237978",
-		        "url": "www.scape.com.sg",
-		        "phone": " 6521 6565",
-		        "contain_carpark": false,
-		        "updated_time": 1351848429
-		 },
-		 {
-		        "id": 320,
-		        "name": "Yew Tee Square",
-		        "sl_mall_id":"4ccaef4d-6c3b-4cbe-b44e-76379979a255",
-		        "address": "622 Choa Chu Kang Street 62",
-		        "latitude": 1.39803,
-		        "longitude": 103.747,
-		        "zip": "680622",
-		        "url": "http://www.hdb.gov.sg/fi1/fi133p.nsf/w/ShopperNeighbourhoodComplex23?OpenDocument",
-		        "phone": ""
-		        "contain_carpark": false,
-		        "updated_time": 1351848429
-		        }
-		    ]
-		}
+    "user": {
+        "email_address": "admin@mail.com",
+        "secure_token": "vqB1KHDnMoDWj8e6iAcYYA",
+        "token_expire": "2014-01-03T10:20:55.666Z"
+    }
+}
 ```	
 	
 

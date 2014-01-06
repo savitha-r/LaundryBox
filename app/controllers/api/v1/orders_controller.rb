@@ -42,6 +42,11 @@ class Api::V1::OrdersController < Api::ApiController
 		render "show"
 	end
 
+	def get_reciept
+		@order = get_entity Order.find_by_id(params[:order_id])
+		render "show"
+	end
+
 
 
 
@@ -49,7 +54,11 @@ class Api::V1::OrdersController < Api::ApiController
 	private
 
 	def check_order_belongs_to_user
-		@order = get_entity Order.find_by_id(params[:id])
+		if params[:id].nil?
+			@order = get_entity Order.find_by_id(params[:order_id])
+		else
+			@order = get_entity Order.find_by_id(params[:id])
+		end
 		unless @order.user_id == current_user.id || current_user.role == "collector"
 			render_errors('501',['This order does not belong to the current user.'])
 		end

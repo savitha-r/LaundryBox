@@ -1,7 +1,6 @@
 class Api::V1::UsersController < Api::ApiController
 	before_filter :check_access_token, :except => [:create]
-	before_filter :check_collector, :only => [:index]
-
+	
 	def create
 		@user = User.new(user_profile_parameters)
 		if @user.save
@@ -23,17 +22,21 @@ class Api::V1::UsersController < Api::ApiController
 		@user = current_user
 	end
 
+	def top_up
+		@user = get_entity User.find_by_id(params[:user_id])
+		@user.credit += params[:credit]
+		if @user.save
+			render "show"
+		else
+			render_errors('501', @user.errors)
+		end
+	end
+
 	def index
 		@user = User.all
 	end
 
 	private
-
-	def check_collector
-		unless current_user.role == "collector"
-			render_errors('501',['You are not authorised for this action.'])
-		end
-	end
 
 
 	def user_profile_parameters

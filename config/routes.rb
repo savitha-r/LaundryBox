@@ -16,16 +16,23 @@ LaundryBox::Application.routes.draw do
   namespace :api do
     post 'sign_in' => 'sessions#sign_in'
     get 'sign_out' => 'sessions#sign_out'
+    namespace :admin do
+        resources :items
+        resources :orders
+        resources :categories
+    end
     namespace :v1 do
       post 'sign_up' => 'users#create'
       resources :users do
-        post 'top_up' => 'users#top_up'
+        member do
+          post :top_up
+        end
       end
       resources :orders do
-        get 'get_reciept' => 'orders#get_reciept'
-      end
-      namespace :admin do
-        resources :items
+        #use memebers and collection
+        member do
+          get :get_reciept
+        end
       end
     end
   end

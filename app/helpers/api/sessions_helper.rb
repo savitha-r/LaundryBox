@@ -2,14 +2,11 @@ module Api::SessionsHelper
 
   def login(user)
     #user.update_token_expire
-    user.set_secure_token
-    user.save
     self.current_user = user
   end
 
   def logout(user)
-  	current_user.remove_secure_token
-    self.current_user = nil
+  	self.current_user = nil
   end
 
   def set_current_user(member)

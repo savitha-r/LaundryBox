@@ -9,33 +9,34 @@ class User < ActiveRecord::Base
 	before_save :set_secure_token
 
 	ROLES = ["customer", "collector", "admin"]
+	CUSTOMER = "customer"
+	COLLECTOR = "collector"
+	ADMIN = "admin"
 
 	def check_session_expire
-		if !self.secure_token_expire.nil? && DateTime.now > self.secure_token_expire
+		if DateTime.now > self.updated_at + 1.hours
 			return true
 		else
 			return false
 		end
 	end
 
-	def set_secure_token
-		self.secure_token = SecureRandom.urlsafe_base64
-		self.secure_token_expire = DateTime.now + 1.hours
-	end
-
-	def update_token_expire
-		self.secure_token_expire = DateTime.now + 1.hours
-	end
-
-	def remove_secure_token
-		self.secure_token = nil
-		self.secure_token_expire = nil
-		self.save
+	def token
+		Digest::SHA1.hexdigest (self.email + self.updated_at.to_s)
 	end
 
 	def deduct_credit(cost)
 		self.credit = self.credit - cost
 		self.save
 	end
+
+	def is_admin?
+		self.role == ADMIN
+	end
+
+	def is_collector?
+		self.role == COLLECTOR
+	end
+
 
 end

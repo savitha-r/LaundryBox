@@ -4,13 +4,9 @@ class Api::V1::OrdersController < Api::ApiController
 	def create
 		@order = current_user.orders.build(order_profile_parameters)
 		if @order.save
-			if @order.update_attributes(order_child_parameters)
-				render "show"
-			else
-				render_errors('501', @order.errors)
-			end
+			render "show"
 		else
-			render_errors('501',@order.errors)
+			render_errors('5002',@order.errors)
 		end
 	end
 
@@ -19,7 +15,7 @@ class Api::V1::OrdersController < Api::ApiController
 		if @order.update_attributes(order_profile_parameters)
 			render "show"
 		else
-			render_errors('501', @order.errors)
+			render_errors('5002', @order.errors)
 		end
 	end
 
@@ -28,7 +24,7 @@ class Api::V1::OrdersController < Api::ApiController
 	end
 
 	def index
-		@orders = get_entity Order.find_all_by_user_id(current_user.id)
+		@orders = current_user.orders
 	end
 
 	def payment
@@ -43,7 +39,7 @@ class Api::V1::OrdersController < Api::ApiController
 	end
 
 	def get_reciept
-		@order = get_entity Order.find_by_id(params[:order_id])
+		@order = get_entity Order.find_by_id(params[:id])
 		render "show"
 	end
 
@@ -54,19 +50,11 @@ class Api::V1::OrdersController < Api::ApiController
 	private
 
 	def check_order_belongs_to_user
-		if params[:id].nil?
-			@order = get_entity Order.find_by_id(params[:order_id])
-		else
-			@order = get_entity Order.find_by_id(params[:id])
-		end
-		unless @order.user_id == current_user.id || current_user.role == "collector"
+		@order = get_entity Order.find_by_id(params[:id])
+		unless @order.user_id == current_user.id || current_user.is_collector?
 			render_errors('501',['This order does not belong to the current user.'])
 		end
 	end
-
-	def order_child_parameters
-    	params.require(:order).permit(:item_ids => [])
-  	end	
 
 	def order_profile_parameters
     	params.require(:order).permit(:cost, :status, :special_message)

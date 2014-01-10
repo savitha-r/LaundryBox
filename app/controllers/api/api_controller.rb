@@ -22,12 +22,13 @@ class Api::ApiController < ActionController::Base
   end
 
   def check_access_token
-    @user = get_entity User.find_by_secure_token(params[:secure_token])
-    if @user.check_session_expire
-      render_errors('501',['Session expired'])
-    else
+    @user = get_entity User.find_by_email(params[:email])
+
+    if params[:token] == @user.token && !@user.check_session_expire
       set_current_user(@user)
-    end
+    else
+      render_errors('5001',['Session expired'])
       
+    end
   end
 end

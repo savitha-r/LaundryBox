@@ -2,6 +2,5 @@
 
 json.user do
   json.email_address @user.email
-  json.secure_token @user.secure_token
-  json.token_expire @user.secure_token_expire
+  json.updated_at @user.updated_at
 end

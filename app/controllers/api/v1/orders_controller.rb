@@ -57,6 +57,6 @@ class Api::V1::OrdersController < Api::ApiController
 	end
 
 	def order_profile_parameters
-    	params.require(:order).permit(:cost, :status, :special_message)
+    	params.require(:order).permit(:cost, :status, :special_message, items_attributes: [:name])
   	end
 end

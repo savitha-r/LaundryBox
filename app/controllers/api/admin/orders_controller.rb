@@ -34,6 +34,6 @@ class Api::Admin::OrdersController < Api::Admin::AdminController
 
 	private
 	def order_profile_parameters
-    	params.require(:order).permit(:cost, :status, :special_message)
+    	params.require(:order).permit(:cost, :status, :special_message, items_attributes: [:name])
   	end
 end
